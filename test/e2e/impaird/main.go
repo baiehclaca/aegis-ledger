@@ -138,6 +138,12 @@ func runBridge(ports []port, in <-chan inbound, commands <-chan bool, delay, jit
 	for {
 		select {
 		case frame := <-in:
+			// A full delay queue used to discard the frame. With impairment
+			// off, every frame is already due, so flushing makes room and
+			// the partition phase does not add its own loss.
+			if b.q.Len() >= queueCap {
+				b.flush()
+			}
 			b.admit(frame)
 		case <-tick.C:
 			b.flush()
@@ -248,11 +254,10 @@ func readPort(p port, from int, node bool, out chan<- inbound) {
 		}
 		frame := make([]byte, n)
 		copy(frame, buf[:n])
-		// Block when the bridge is behind. Discarding here is loss on
-		// top of the configured rate. A 7-node run under the race
-		// detector fills a non-blocking send, followers miss parents,
-		// and they then reject every block that carries an event while
-		// empty blocks still commit.
+		// Block when the bridge is behind. Discarding here is loss with
+		// impairment off. TCP then sees a drop the partition did not ask
+		// for, and a view that already sent its one timeout never hears
+		// a certificate.
 		out <- inbound{from: from, node: node, frame: frame}
 	}
 }

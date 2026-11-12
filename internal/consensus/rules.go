@@ -11,8 +11,26 @@ import (
 )
 
 func (r *Replica) onTimer(now int64) (Output, error) {
-	if !r.canSign() || !r.pace.MarkSent(r.view) {
+	if !r.canSign() {
 		return Output{}, nil
+	}
+	// One signature per view. A later firing sends those same bytes again.
+	// The first round is not a delivery: a userspace bridge that sheds
+	// frames, or a connection that dies after the write is accepted, drops
+	// it. Without another send the view stays put, because nothing rearms
+	// the timer, and a committed event never reaches the next leader.
+	retry := Timer{View: r.view, After: r.pace.Duration(r.pCfg)}
+	if !r.pace.MarkSent(r.view) {
+		signed, ok := r.pace.Signed(r.view, uint8(r.index))
+		if !ok {
+			return Output{}, nil
+		}
+		return Output{
+			Timer: retry,
+			Messages: r.fanout(func(i int) Outbound {
+				return Outbound{To: i, Timeout: &signed}
+			}),
+		}, nil
 	}
 	to := types.Timeout{
 		ChainID: r.chain,
@@ -30,6 +48,9 @@ func (r *Replica) onTimer(now int64) (Output, error) {
 	out.Messages = append(r.fanout(func(i int) Outbound {
 		return Outbound{To: i, Timeout: &to}
 	}), out.Messages...)
+	if out.Timer.After == 0 {
+		out.Timer = retry
+	}
 	return out, nil
 }
 

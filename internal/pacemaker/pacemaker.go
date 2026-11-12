@@ -65,6 +65,17 @@ func (s *State) Duration(cfg Config) uint64 {
 	return d
 }
 
+// Signed returns the timeout stored for signer in view. A retried timer
+// rebroadcasts it instead of signing a second wish.
+func (s *State) Signed(view uint64, signer uint8) (types.Timeout, bool) {
+	by := s.bag[view]
+	if by == nil {
+		return types.Timeout{}, false
+	}
+	t, ok := by[signer]
+	return t, ok
+}
+
 // MarkSent reports whether this replica should broadcast a timeout for
 // view. The second call for the same view is false, so a retried timer
 // cannot produce a second signed wish.

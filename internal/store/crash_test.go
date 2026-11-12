@@ -83,7 +83,7 @@ func TestKillMidVote(t *testing.T) {
 	if countVotes(replay) != 0 || countVotes(again) != 0 || countProposals(replay) != 0 {
 		t.Fatal("restart signed a second vote or proposal")
 	}
-	if countTimeouts(replay) == 0 || countTimeouts(again) != 0 {
+	if countTimeouts(replay) == 0 || !sameTimeouts(replay, again) {
 		t.Fatalf("timeouts first=%d second=%d", countTimeouts(replay), countTimeouts(again))
 	}
 	snap, ok, err := d.GetSnapshot()

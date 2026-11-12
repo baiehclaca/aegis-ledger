@@ -61,6 +61,18 @@ func TestTimeoutPathCommits(t *testing.T) {
 	}
 }
 
+func TestTimeoutRetransmitAdvances(t *testing.T) {
+	n := newNet(t, 4, 1_000, 20)
+	n.skipView = 1
+	// One round is four replicas times three peers. Dropping it used to
+	// leave the view in place, because the timer was not armed again.
+	n.dropTimeouts = 4 * 3
+	n.driveUntil(t, 500, nil, func() bool { return n.nodes[0].View() > 1 })
+	if n.nodes[0].View() <= 1 {
+		t.Fatal("view stayed put after the first timeout round was lost")
+	}
+}
+
 func TestEventCommitsOnce(t *testing.T) {
 	keys := testKeys(t, 4)
 	g, block, qc, err := BuildGenesis(1_000, keys)
@@ -349,15 +361,16 @@ func TestLoadRefusesSecondVote(t *testing.T) {
 }
 
 type net struct {
-	nodes    []*Replica
-	timers   []Timer
-	armed    []int64
-	queue    []packet
-	now      int64
-	base     uint64
-	skipView uint64
-	commits  []map[uint64][crypto.DigestSize]byte
-	voted    map[voteKey][crypto.DigestSize]byte
+	nodes        []*Replica
+	timers       []Timer
+	armed        []int64
+	queue        []packet
+	now          int64
+	base         uint64
+	skipView     uint64
+	dropTimeouts int
+	commits      []map[uint64][crypto.DigestSize]byte
+	voted        map[voteKey][crypto.DigestSize]byte
 }
 
 type packet struct {
@@ -468,7 +481,14 @@ func (n *net) split() (due, rest []packet) {
 }
 
 func (n *net) skip(m Outbound) bool {
-	return n.skipView != 0 && m.Proposal != nil && m.Proposal.Block.Header.View == n.skipView
+	if n.skipView != 0 && m.Proposal != nil && m.Proposal.Block.Header.View == n.skipView {
+		return true
+	}
+	if m.Timeout != nil && n.dropTimeouts > 0 {
+		n.dropTimeouts--
+		return true
+	}
+	return false
 }
 
 func (n *net) observe(t *testing.T, node int, out Output) {

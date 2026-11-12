@@ -1,6 +1,7 @@
 package store
 
 import (
+	"bytes"
 	"errors"
 	"testing"
 
@@ -88,7 +89,7 @@ func TestRestartDoesNotDoubleSign(t *testing.T) {
 	if countTimeouts(first) == 0 {
 		t.Fatal("the torn timeout was treated as already sent")
 	}
-	if countTimeouts(second) != 0 || countVotes(first) != 0 || countVotes(second) != 0 {
+	if !sameTimeouts(first, second) || countVotes(first) != 0 || countVotes(second) != 0 {
 		t.Fatal("second signature after restart")
 	}
 	snap, ok, err := d.GetSnapshot()
@@ -158,4 +159,23 @@ func countTimeouts(out consensus.Output) int {
 		}
 	}
 	return n
+}
+
+// sameTimeouts reports that both outputs carry the same timeout
+// signatures. A later timer firing rebroadcasts the wish it already
+// signed; a second signature would not match.
+func sameTimeouts(a, b consensus.Output) bool {
+	as := timeoutSigs(a)
+	bs := timeoutSigs(b)
+	return len(as) > 0 && bytes.Equal(as, bs)
+}
+
+func timeoutSigs(out consensus.Output) []byte {
+	var raw []byte
+	for _, m := range out.Messages {
+		if m.Timeout != nil {
+			raw = append(raw, m.Timeout.Signature...)
+		}
+	}
+	return raw
 }
