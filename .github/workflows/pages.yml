@@ -23,8 +23,8 @@ jobs:
       run:
         working-directory: website
     env:
-      NEXT_PUBLIC_BASE_PATH: /aegis-ledger
-      NEXT_PUBLIC_SITE_URL: https://baiehclaca.github.io/aegis-ledger
+      NEXT_PUBLIC_BASE_PATH: /silver-grey-ledger
+      NEXT_PUBLIC_SITE_URL: https://silvergreyhound.github.io/silver-grey-ledger
       NEXT_TELEMETRY_DISABLED: "1"
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1

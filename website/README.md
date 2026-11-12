@@ -1,12 +1,14 @@
-# Aegis Ledger website
+# Silver Grey Ledger website
 
-Next.js 15 static export for https://baiehclaca.github.io/aegis-ledger/.
+Next.js 15 static export for https://silvergreyhound.github.io/silver-grey-ledger/.
 
 ```
 pnpm install
-pnpm dev                                         # http://localhost:3000
-NEXT_PUBLIC_BASE_PATH=/aegis-ledger pnpm build   # static site in out/
+pnpm dev                    # http://localhost:3000
+pnpm build                  # local preview build, empty base path, static site in out/
+GITHUB_PAGES=true pnpm build                         # Pages build, base path /silver-grey-ledger
+NEXT_PUBLIC_BASE_PATH=/silver-grey-ledger pnpm build # same, explicit
 ```
 
-Deployed by `.github/workflows/pages.yml` on pushes to `main` that change `website/**`.
+Product name: `PRODUCT_NAME` in `lib.ts`.
 Contact email: set `CONTACT_EMAIL` in `lib.ts` when chosen.

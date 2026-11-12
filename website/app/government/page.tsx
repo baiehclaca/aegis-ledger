@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import { LayerDiagram } from "@/components/Diagrams";
+import { PRODUCT_NAME } from "@/lib";
 import { Button, Note, PageHero, Rows, Section, Split } from "@/components/ui";
 
 export const metadata: Metadata = {
   title: "Government",
-  description: "Aegis Ledger for defense supply chain provenance, access records and audit. A concept in development.",
+  description: `${PRODUCT_NAME} for defense supply chain provenance, access records and audit. A concept in development.`,
   alternates: { canonical: "./" },
 };
 
@@ -48,7 +49,8 @@ export default function Government() {
       <Section>
         <Split label="Procurement" title="Nothing to procure yet.">
           <p className="text-[17px] leading-7 text-mist">
-            Aegis Ledger is a concept in development. No system has been built, tested, or deployed. Agencies and partners who want to follow or discuss the design can get in touch.
+            {/* POST-LANDING COPY: go live only once the code is in the repo. Pre-landing text is in REBRAND.md. */}
+            {PRODUCT_NAME} is in development. A production build is in the public repository. No network has been deployed. Agencies and partners who want to follow or discuss the design can get in touch.
           </p>
           <div className="mt-8 flex flex-wrap gap-4">
             <Button href="/contact/">Contact</Button>

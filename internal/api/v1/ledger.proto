@@ -1,0 +1,188 @@
+syntax = "proto3";
+
+package silvergrey.v1;
+
+import "google/api/annotations.proto";
+
+option go_package = "github.com/silvergreyhound/silver-grey-ledger/internal/api/pb;pb";
+
+// Ledger is the external API. A client certificate is an ML-DSA-65 key.
+// The ledger, not the certificate alone, decides what that key may read
+// or write. Governance proposals are signed by the client; the node does
+// not hold an admin key.
+service Ledger {
+  rpc SubmitEvent(SubmitEventRequest) returns (SubmitEventResponse) {
+    option (google.api.http) = {
+      post: "/v1/events"
+      body: "*"
+    };
+  }
+  rpc GetEvent(GetEventRequest) returns (GetEventResponse) {
+    option (google.api.http) = {get: "/v1/events/{event_id}"};
+  }
+  rpc GetProof(GetProofRequest) returns (GetProofResponse) {
+    option (google.api.http) = {get: "/v1/events/{event_id}/proof"};
+  }
+  rpc SubjectHistory(SubjectHistoryRequest) returns (SubjectHistoryResponse) {
+    option (google.api.http) = {get: "/v1/subjects/{subject_hex}/history"};
+  }
+  rpc VerifyDocument(VerifyDocumentRequest) returns (VerifyDocumentResponse) {
+    option (google.api.http) = {
+      post: "/v1/verify/document"
+      body: "*"
+    };
+  }
+  rpc GetBlock(GetBlockRequest) returns (BlockResponse) {
+    option (google.api.http) = {get: "/v1/blocks/{height}"};
+  }
+  rpc LatestBlock(LatestBlockRequest) returns (BlockResponse) {
+    option (google.api.http) = {get: "/v1/blocks/latest"};
+  }
+  rpc Members(MembersRequest) returns (MembersResponse) {
+    option (google.api.http) = {get: "/v1/members"};
+  }
+  rpc Membership(MembershipRequest) returns (MembershipResponse) {
+    option (google.api.http) = {get: "/v1/membership"};
+  }
+  rpc Status(StatusRequest) returns (StatusResponse) {
+    option (google.api.http) = {get: "/v1/status"};
+  }
+  rpc StreamEvents(StreamEventsRequest) returns (stream EventNotice) {
+    option (google.api.http) = {get: "/v1/stream/events"};
+  }
+  rpc ProposeGovernance(ProposeGovernanceRequest) returns (ProposeGovernanceResponse) {
+    option (google.api.http) = {
+      post: "/v1/governance/proposals"
+      body: "*"
+    };
+  }
+  rpc SignGovernance(SignGovernanceRequest) returns (SignGovernanceResponse) {
+    option (google.api.http) = {
+      post: "/v1/governance/proposals/{id}/sign"
+      body: "*"
+    };
+  }
+  rpc ListGovernance(ListGovernanceRequest) returns (ListGovernanceResponse) {
+    option (google.api.http) = {get: "/v1/governance/proposals"};
+  }
+}
+
+message SubmitEventRequest {
+  bytes writer = 1;
+  bytes event = 2;
+}
+
+message SubmitEventResponse {
+  bytes event_id = 1;
+  string status = 2;
+}
+
+message GetEventRequest {
+  string event_id = 1;
+}
+
+message GetEventResponse {
+  bytes event = 1;
+  uint64 height = 2;
+  string finality = 3;
+}
+
+message GetProofRequest {
+  string event_id = 1;
+}
+
+message GetProofResponse {
+  bytes proof = 1;
+}
+
+message SubjectHistoryRequest {
+  string subject_hex = 1;
+}
+
+message SubjectHistoryResponse {
+  repeated string event_ids = 1;
+}
+
+message VerifyDocumentRequest {
+  bytes doc_hash = 1;
+  bytes proof = 2;
+  bytes validators = 3;
+  bytes writer = 4;
+}
+
+message VerifyDocumentResponse {
+  bool match = 1;
+  uint64 height = 2;
+  uint64 view = 3;
+  int64 claimed_time = 4;
+  bytes event_id = 5;
+  bytes proof = 6;
+}
+
+message GetBlockRequest {
+  uint64 height = 1;
+}
+
+message LatestBlockRequest {}
+
+message BlockResponse {
+  uint64 height = 1;
+  bytes block = 2;
+}
+
+message MembersRequest {}
+
+message MembersResponse {
+  bytes validator_set = 1;
+}
+
+message MembershipRequest {}
+
+message MembershipResponse {
+  bytes commit_qc = 1;
+  repeated bytes headers = 2;
+  repeated bytes witnesses = 3;
+}
+
+message StatusRequest {}
+
+message StatusResponse {
+  bytes chain = 1;
+  uint64 height = 2;
+  bytes commit_hash = 3;
+  uint64 view = 4;
+}
+
+message StreamEventsRequest {}
+
+message EventNotice {
+  bytes event_id = 1;
+  uint64 height = 2;
+  string finality = 3;
+}
+
+message ProposeGovernanceRequest {
+  bytes tx = 1;
+}
+
+message ProposeGovernanceResponse {
+  bytes id = 1;
+  uint32 signatures = 2;
+  bool submitted = 3;
+}
+
+message SignGovernanceRequest {
+  string id = 1;
+  bytes signature = 2;
+}
+
+message SignGovernanceResponse {
+  uint32 signatures = 1;
+  bool submitted = 2;
+}
+
+message ListGovernanceRequest {}
+
+message ListGovernanceResponse {
+  repeated string ids = 1;
+}

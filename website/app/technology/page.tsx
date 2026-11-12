@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import { AgreementDiagram, LayerDiagram } from "@/components/Diagrams";
+import { PRODUCT_NAME } from "@/lib";
 import { Note, PageHero, Rows, Section, Split } from "@/components/ui";
 
 export const metadata: Metadata = {
   title: "Technology",
-  description: "High-level architecture of Aegis Ledger: permissioned network, BFT agreement, post-quantum signatures, SHA-3 and tamper-evidence.",
+  description: `High-level architecture of ${PRODUCT_NAME}: permissioned network, BFT agreement, post-quantum signatures, SHA-3 and tamper-evidence.`,
   alternates: { canonical: "./" },
 };
 
@@ -44,7 +45,8 @@ export default function Technology() {
         <Split label="Interfaces" title="Command line and API first.">
           <p className="text-[17px] leading-7 text-mist">A dashboard comes later.</p>
         </Split>
-        <Note>No performance figures are published. None have been measured, because no system has been built, tested, or deployed.</Note>
+        {/* POST-LANDING COPY: go live only once the code is in the repo. Pre-landing text is in REBRAND.md. */}
+        <Note>No performance figures are published. No network has been deployed.</Note>
       </Section>
     </>
   );

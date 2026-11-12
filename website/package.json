@@ -1,27 +1,8 @@
 {
-  "name": "aegis-ledger-site",
+  "name": "silver-grey-ledger-site",
   "private": true,
   "version": "0.1.0",
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "lint": "tsc --noEmit"
-  },
-  "dependencies": {
-    "next": "15.5.6",
-    "react": "19.1.1",
-    "react-dom": "19.1.1"
-  },
-  "devDependencies": {
-    "@tailwindcss/postcss": "^4.1.13",
-    "tailwindcss": "^4.1.13",
-    "typescript": "^5.9.2",
-    "@types/react": "^19.1.12",
-    "@types/node": "^22.18.0",
-    "@types/react-dom": "^19.1.9"
-  },
-  "packageManager": "pnpm@10.34.6",
-  "engines": {
-    "node": ">=20"
-  }
+  "scripts": { "dev": "next dev", "build": "next build", "lint": "tsc --noEmit" },
+  "dependencies": { "next": "15.5.6", "react": "19.1.1", "react-dom": "19.1.1" },
+  "devDependencies": { "@tailwindcss/postcss": "^4.1.13", "tailwindcss": "^4.1.13", "typescript": "^5.9.2", "@types/react": "^19.1.12", "@types/node": "^22.18.0", "@types/react-dom": "^19.1.9" }
 }
