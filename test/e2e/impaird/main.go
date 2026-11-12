@@ -248,10 +248,12 @@ func readPort(p port, from int, node bool, out chan<- inbound) {
 		}
 		frame := make([]byte, n)
 		copy(frame, buf[:n])
-		select {
-		case out <- inbound{from: from, node: node, frame: frame}:
-		default:
-		}
+		// Block when the bridge is behind. Discarding here is loss on
+		// top of the configured rate. A 7-node run under the race
+		// detector fills a non-blocking send, followers miss parents,
+		// and they then reject every block that carries an event while
+		// empty blocks still commit.
+		out <- inbound{from: from, node: node, frame: frame}
 	}
 }
 
