@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
-import { ISSUES, REPO } from "@/lib";
+import { ISSUES, PRODUCT_NAME, REPO, WHITEPAPER_FILE } from "@/lib";
 import { Button, Note, PageHero, Rows, Section, Split } from "@/components/ui";
 
 export const metadata: Metadata = {
   title: "Open Source",
-  description: "Aegis Ledger is developed in a public GitHub repository. Read the design, follow the build, open an issue.",
+  description: `${PRODUCT_NAME} is developed in a public GitHub repository. Read the design, follow the build, open an issue.`,
   alternates: { canonical: "./" },
 };
 
@@ -20,17 +20,19 @@ export default function OpenSource() {
       </PageHero>
 
       <Section tone="light">
-        <Split label="In the repository today" title="A whitepaper and a site. Code comes next.">
+        {/* POST-LANDING COPY: go live only once the code is in the repo. Pre-landing text is in REBRAND.md. */}
+        <Split label="In the repository" title="The whitepaper, the code and this site.">
           <ul className="space-y-3 text-[17px] leading-7 opacity-80">
-            <li>↳ aegis-ledger-whitepaper.pdf — the concept draft, November 2026.</li>
+            <li>↳ {WHITEPAPER_FILE} — the concept draft, November 2026.</li>
             <li>↳ README.md — a short description.</li>
-            <li>↳ index.html — the current project page, served by GitHub Pages.</li>
+            <li>↳ The source of the production build, in development.</li>
+            <li>↳ The source of this website, served by GitHub Pages.</li>
           </ul>
         </Split>
         <Rows
           rows={[
-            { title: "License", body: "Not chosen yet. There is no license file in the repository, so default copyright applies until one is added.", tag: "Open" },
-            { title: "Status", body: "Concept in design. No system has been built, tested, or deployed.", tag: "Concept" },
+            { title: "License", body: "Apache-2.0.", tag: "Open" },
+            { title: "Status", body: "A production build is in development in this repository. No network has been deployed.", tag: "In development" },
           ]}
         />
       </Section>
@@ -53,8 +55,8 @@ export default function OpenSource() {
       <Section tone="graphite">
         <Split label="Run and build" title="Get the source.">
           <div className="space-y-4">
-            <Cmd>git clone https://github.com/baiehclaca/aegis-ledger.git</Cmd>
-            <p className="text-[15px] leading-6 text-mist">There is no code to build or run yet. The repository holds the whitepaper and the project page.</p>
+            <Cmd>{`git clone ${REPO}.git`}</Cmd>
+            <p className="text-[15px] leading-6 text-mist">The production build is in development and not released. See the README in the repository for its current state.</p>
           </div>
         </Split>
       </Section>

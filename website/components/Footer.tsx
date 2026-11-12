@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { NAV, REPO } from "@/lib";
+import { NAV, PRODUCT_NAME, REPO, STATUS_LINE } from "@/lib";
 import { Wordmark } from "./Mark";
 
 export function Footer() {
@@ -25,11 +25,11 @@ export function Footer() {
             <p className="t-label text-ash">Source</p>
             <ul className="mt-4 space-y-2 text-[14px]">
               <li><a href={REPO} className="u-link text-mist hover:text-white">GitHub repository ↗</a></li>
-              <li className="text-ash">License: not chosen yet</li>
+              <li className="text-ash">License: Apache-2.0.</li>
             </ul>
           </div>
         </div>
-        <p className="mt-16 text-[12px] text-ash">Aegis Ledger · Concept draft · November 2026 · No system has been built, tested, or deployed.</p>
+        <p className="mt-16 text-[12px] text-ash">{PRODUCT_NAME} · Concept draft · November 2026 · {STATUS_LINE}</p>
       </div>
     </footer>
   );

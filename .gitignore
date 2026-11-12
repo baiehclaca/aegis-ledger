@@ -1,0 +1,34 @@
+/bin/
+/dist/
+*.out
+coverage.out
+**/testdata/fuzz/
+spec/tla/tla2tools.jar
+spec/tla/states/
+
+# Staging copies. The whitepaper PDF lives in another repository.
+/uploads/
+
+# Test-network key files and passphrases.
+*.key
+*.pub
+*.pem
+*passphrase*
+passphrase
+passphrase.txt
+
+# Local node config and Pebble data, wherever a datadir is created.
+node.conf
+data/
+CURRENT
+LOCK
+MANIFEST-*
+OPTIONS-*
+*.sst
+*.log
+*.wal
+
+# Local environment files.
+.env
+.env.*
+!.env.example

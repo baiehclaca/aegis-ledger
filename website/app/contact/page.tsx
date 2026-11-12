@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
-import { CONTACT_EMAIL, ISSUES, REPO } from "@/lib";
+import { CONTACT_EMAIL, ISSUES, PRODUCT_NAME, REPO } from "@/lib";
 import { Button, PageHero, Rows, Section } from "@/components/ui";
 
 export const metadata: Metadata = {
   title: "Contact",
-  description: "Contact the Aegis Ledger project.",
+  description: `Contact the ${PRODUCT_NAME} project.`,
   alternates: { canonical: "./" },
 };
 

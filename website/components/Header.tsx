@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { NAV } from "@/lib";
+import { NAV, PRODUCT_NAME } from "@/lib";
 import { Wordmark } from "./Mark";
 
 export function Header() {
@@ -11,7 +11,7 @@ export function Header() {
         </p>
       </div>
       <nav aria-label="Main" className="mx-auto flex max-w-[1440px] items-center justify-between px-5 py-5 sm:px-8">
-        <Link href="/" aria-label="Aegis Ledger, home"><Wordmark /></Link>
+        <Link href="/" aria-label={`${PRODUCT_NAME}, home`}><Wordmark /></Link>
         <ul className="hidden items-center gap-8 lg:flex">
           {NAV.map((n) => (
             <li key={n.href}><Link href={n.href} className="u-link text-[14px] text-mist hover:text-white">{n.label}</Link></li>

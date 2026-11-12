@@ -4,7 +4,7 @@ import "./globals.css";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { RevealObserver } from "@/components/Reveal";
-import { SITE_URL } from "@/lib";
+import { PRODUCT_NAME, SITE_TITLE, SITE_URL, TITLE_TEMPLATE } from "@/lib";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
 
@@ -12,12 +12,12 @@ const description = "A permissioned blockchain concept for national defense supp
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL + "/"),
-  title: { default: "Aegis Ledger — A shared record no one can rewrite", template: "%s — Aegis Ledger" },
+  title: { default: SITE_TITLE, template: TITLE_TEMPLATE },
   description,
-  applicationName: "Aegis Ledger",
+  applicationName: PRODUCT_NAME,
   alternates: { canonical: "./" },
-  openGraph: { type: "website", siteName: "Aegis Ledger", title: "Aegis Ledger — A shared record no one can rewrite", description, url: "./", images: [{ url: "og.png", width: 1200, height: 630, alt: "Aegis Ledger — A shared record no one can rewrite." }] },
-  twitter: { card: "summary_large_image", title: "Aegis Ledger", description, images: ["og.png"] },
+  openGraph: { type: "website", siteName: PRODUCT_NAME, title: SITE_TITLE, description, url: "./", images: [{ url: "og.png", width: 1200, height: 630, alt: `${SITE_TITLE}.` }] },
+  twitter: { card: "summary_large_image", title: PRODUCT_NAME, description, images: ["og.png"] },
   robots: { index: true, follow: true },
 };
 

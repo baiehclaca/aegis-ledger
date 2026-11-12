@@ -1,6 +1,8 @@
 import { AgreementDiagram } from "@/components/Diagrams";
 import { Button, Label, Note, Rows, Section, Split } from "@/components/ui";
 import Link from "next/link";
+import { Mark } from "@/components/Mark";
+import { PRODUCT_NAME } from "@/lib";
 
 export default function Home() {
   return (
@@ -65,13 +67,37 @@ export default function Home() {
       </Section>
 
       <Section>
-        <Split label="Status" title="A concept in design.">
+        {/* POST-LANDING COPY: go live only once the code is in the repo. Pre-landing text is in REBRAND.md. */}
+        <Split label="Status" title="In development.">
           <p className="text-[17px] leading-7 text-mist">
-            The whitepaper describes a proposal for further definition. No system has been built, tested, or deployed yet. Work has started on a production build.
+            The whitepaper describes a proposal for further definition. A production build is in development in the public repository. No network has been deployed.
           </p>
           <div className="mt-8"><Button href="/technology/" variant="line">See the planned technology</Button></div>
         </Split>
-        <Note>Aegis Ledger makes no claims of certification, accreditation, customers or performance.</Note>
+        <Note>{PRODUCT_NAME} makes no claims of certification, accreditation, customers or performance.</Note>
+      </Section>
+
+      <Section tone="light" id="name">
+        <div className="grid gap-10 md:grid-cols-12">
+          <div className="md:col-span-7">
+            <p className="t-label reveal opacity-60">The name</p>
+            <Mark hairline className="reveal mt-10 h-24 w-24 md:h-32 md:w-32" />
+            <h2 className="t-title reveal mt-8 max-w-[16ch]">Named after a courier’s token.</h2>
+          </div>
+          <div className="reveal space-y-6 md:col-span-5 md:pt-12">
+            <p className="text-[17px] leading-7 opacity-80">
+              The silver greyhound is the emblem of the King’s Messengers, the British royal and diplomatic couriers who carry private dispatches for the state. By tradition, Charles II broke four silver greyhounds from a platter and gave them to his messengers as tokens. The emblem stuck.
+            </p>
+            <p className="text-[17px] leading-7 opacity-80">
+              In 1918 the U.S. Army formed a wartime courier service known as the Silver Greyhounds. It became the foundation of today’s U.S. Diplomatic Courier Service.
+            </p>
+          </div>
+        </div>
+        <figure className="reveal mt-20 border-t hair pt-10">
+          <blockquote className="t-display max-w-[14ch]">None Swifter Than These.</blockquote>
+          <figcaption className="mt-6 text-[14px] leading-6 opacity-70">Motto of the U.S. Diplomatic Courier Service, inherited from the Silver Greyhounds. From Herodotus, on the couriers of Persia.</figcaption>
+        </figure>
+        <Note>{PRODUCT_NAME} takes its name from this history. It is not affiliated with or endorsed by the UK or U.S. governments or their courier services.</Note>
       </Section>
     </>
   );
