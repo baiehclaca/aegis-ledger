@@ -1,22 +1,24 @@
-# Silver Grey Ledger
+<p align="center">
+  <img src="docs/hero.svg" alt="Silver Grey Ledger — A shared record no one can rewrite. Motto: None Swifter Than These." width="1280" />
+</p>
 
-*None Swifter Than These.*
+Silver Greyhound builds Silver Grey Ledger, a permissioned blockchain for national defense supply chains and access records. Authorized parties share one consistent history. No single organization controls the record.
 
-Silver Grey Ledger is a permissioned Byzantine-fault-tolerant ledger for critical records: supply-chain steps, clearance changes, and system access. Several organisations hold one append-only history. Documents stay in each organisation's own store; the ledger keeps identifiers and SHA3-256 hashes.
+**01 — The record**
 
-**Status: M4.** This tree has the M0 encoding and offline verifier, the M1 HotStuff-2 core, the M2 crash-safe store, the M3 network (TLS 1.3 with X25519MLKEM768 and ML-DSA-65 certificates, a gossiped mempool, and an mTLS API), and M4 governance. Founding signatures are SLH-DSA-SHAKE-128s. Roles and read policy are enforced. Membership changes, rotation, and revocation take effect at an epoch after a governance threshold. M5 is on hold and is not started.
+Several organisations hold one append-only history. Independent nodes must agree before an entry is final. Once written, it cannot be changed or deleted.
 
-Measurements from one run on the build VM are in [docs/benchmarks.md](docs/benchmarks.md), with the machine and the method. They describe that run. They are not a claim about any other machine.
+**02 — What is written**
 
-The design is [docs/design.md](docs/design.md). Section 12 is the M0 encoding. Section 13 is the consensus behaviour. Section 14 is the storage and the crash rules. Section 15 is the transport, the mempool, and the API. Section 16 is governance.
+Critical defense supply-chain events and system access logs. The ledger keeps identifiers, timestamps, status changes, and SHA3-256 hashes. Documents stay in each organisation's own store.
 
+**03 — Status**
 
-- Whitepaper: [silver-grey-ledger-whitepaper.pdf](silver-grey-ledger-whitepaper.pdf)
-- Site: https://silvergreyhound.github.io/silver-grey-ledger/ (source in `website/`, deployed by GitHub Pages)
+In development. No network has been deployed.
 
-The name comes from the silver greyhound, the emblem of the British King's Messengers. Motto: *None Swifter Than These.* Silver Grey Ledger is not affiliated with or endorsed by the UK or U.S. governments or their courier services.
+[Site](https://silvergreyhound.github.io/silver-grey-ledger/) · [Whitepaper](silver-grey-ledger-whitepaper.pdf) · [Design](docs/design.md)
 
-Repository: https://github.com/silvergreyhound/silver-grey-ledger
+---
 
 ## Module path
 
@@ -62,6 +64,10 @@ The namespace test needs `sudo -n`, `ip`, `iptables-legacy`, and `ethtool`. This
 `silvergrey verify document <file> --node <addr> --key <file> --passphrase-file <file> --genesis <file> --writer <key>` hashes the file locally, fetches the proof over mTLS, and checks it against the validator set committed at that block. `--genesis` is the bundle written by `silvergrey node genesis`: the genesis record, the height-0 block, and the view-0 certificate. The client learns the current validator set from the chain. It does not take a `--validators` file for a remote command.
 
 `silvergrey keygen` writes a test-network key file. `silvergrey node genesis` builds the founding record from at least two SLH-DSA keys and the ML-DSA-65 validators. `silvergrey node init` writes a line-oriented config (`node.conf`) for one node. `client` is the mTLS API address. `silvergrey node start` runs that node. `silvergrey event submit` signs one event and sends it to `--node`. The document is hashed on the client and is not uploaded. `silvergrey event proof` writes the inclusion proof. `silvergrey event get` prints a committed event. Every remote command takes `--key`, `--passphrase-file`, and `--genesis`.
+
+## Name
+
+The name comes from the silver greyhound, the emblem of the British King's Messengers. Motto: *None Swifter Than These.* Silver Grey Ledger is not affiliated with or endorsed by the UK or U.S. governments or their courier services.
 
 ## Licence
 
