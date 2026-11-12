@@ -35,6 +35,12 @@ func runNetem(t *testing.T, n, isolate int) {
 	if _, err := exec.Command("sudo", "-n", "true").CombinedOutput(); err != nil {
 		t.Skip("sudo -n is not available")
 	}
+	if err := exec.Command("sudo", "-n", "ethtool", "--version").Run(); err != nil {
+		t.Skip("ethtool is not available")
+	}
+	if err := exec.Command("sudo", "-n", "iptables-legacy", "--version").Run(); err != nil {
+		t.Skip("iptables-legacy is not available")
+	}
 	bin := buildSilverGrey(t)
 	dir := t.TempDir()
 	pass := filepath.Join(dir, "pass")
@@ -99,11 +105,17 @@ func runNetem(t *testing.T, n, isolate int) {
 	for i := range n {
 		ip := fmt.Sprintf("10.90.0.%d", 10+i)
 		sudo(t, "ip", "netns", "add", nsName(i))
-		sudo(t, "ip", "link", "add", hostPeer(i), "type", "veth", "peer", "name", "eth0")
+		// The peer is created under a free name. A runner that already
+		// has eth0 in the root namespace rejects "peer name eth0" with
+		// EEXIST. The interface is renamed after it moves into the new
+		// namespace.
+		peer := fmt.Sprintf("agx%d%d", tag, i)
+		sudo(t, "ip", "link", "add", hostPeer(i), "type", "veth", "peer", "name", peer)
 		sudo(t, "ip", "link", "set", hostPeer(i), "promisc", "on")
 		sudo(t, "ip", "link", "set", hostPeer(i), "up")
 		disableOffload(t, "", hostPeer(i))
-		sudo(t, "ip", "link", "set", "eth0", "netns", nsName(i))
+		sudo(t, "ip", "link", "set", peer, "netns", nsName(i))
+		sudo(t, "ip", "netns", "exec", nsName(i), "ip", "link", "set", peer, "name", "eth0")
 		sudo(t, "ip", "netns", "exec", nsName(i), "ip", "addr", "add", ip+"/24", "dev", "eth0")
 		sudo(t, "ip", "netns", "exec", nsName(i), "ip", "link", "set", "eth0", "up")
 		sudo(t, "ip", "netns", "exec", nsName(i), "ip", "link", "set", "lo", "up")

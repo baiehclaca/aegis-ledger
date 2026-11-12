@@ -39,7 +39,7 @@ golangci-lint run ./...
 go test -race ./...
 ```
 
-`scripts/check.sh` runs those, plus a `gofmt` check and a short fuzz smoke pass. `FUZZTIME` defaults to `5s` per fuzzer. The race tests include the short simulator campaign (safety seeds 1–6 at n=4 and 101–103 at n=7; liveness seeds 201–204 and 301–302) and the crash tests, including `SIGKILL` of a child process mid-write and mid-vote. They also include the namespace tests when `sudo -n` works. Without sudo those tests skip.
+`scripts/check.sh` runs those, plus a `gofmt` check and a short fuzz smoke pass. The race tests run one package at a time, with a 20 minute limit. On a 2-vCPU machine, SLH-DSA-SHAKE-128s under the race detector exceeds the default 10 minute package limit when packages run together. `FUZZTIME` defaults to `5s` per fuzzer. The race tests include the short simulator campaign (safety seeds 1–6 at n=4 and 101–103 at n=7; liveness seeds 201–204 and 301–302) and the crash tests, including `SIGKILL` of a child process mid-write and mid-vote. They also include the namespace tests when `sudo -n`, `ethtool`, and `iptables-legacy` are available. Otherwise those tests skip.
 
 ```sh
 ./scripts/check.sh
